@@ -36,7 +36,7 @@ function Index() {
   return (
     <div className="pp">
       <header className="hero view" id="view-hero"><div className="wrap hero-wrap">
-        <div className="hero-photo"><img src={photo} width={760} height={768} alt="Tracy pointing to the plan picker" /></div>
+        <div className="hero-photo"><img src={photo} width={1200} height={1214} alt="Tracy pointing to the plan picker" /></div>
         <div className="hero-copy">
           <img className="logo" id="hl-logo" alt="HighLevel" hidden={true} />
           <p className="by" id="by"></p>
