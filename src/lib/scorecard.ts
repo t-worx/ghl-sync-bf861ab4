@@ -443,7 +443,9 @@ function renderResult() {
   return s;
 }
 
-/* send the lead to GHL (only when a webhook is set). The page can't see whether GHL accepted it. */
+/* send the lead to the CRM webhook (only when a webhook is set).
+   The endpoint returns access-control-allow-origin: *, so a normal (readable)
+   fetch works and we can confirm whether the workflow trigger accepted it. */
 function sendLead(s) {
   if (!CONFIG.optin.webhook) return;
   const p = CONFIG.plans[s.plan],
@@ -469,9 +471,16 @@ function sendLead(s) {
   body.set("scores", ORDER.map((k) => CONFIG.plans[k].name + " " + s.totals[k]).join(", "));
   body.set("answers", QUESTIONS.map(([q, o], i) => i + 1 + ". " + o[answers[i]][0]).join(" | "));
   body.set("source", "Plan Picker Scorecard");
-  try {
-    fetch(CONFIG.optin.webhook, { method: "POST", mode: "no-cors", body }).catch(() => {});
-  } catch (e) {}
+  fetch(CONFIG.optin.webhook, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body,
+  })
+    .then((r) => {
+      console.log("[scorecard] webhook sent:", r.status, r.statusText);
+      return r.text().then((t) => console.log("[scorecard] webhook response:", t));
+    })
+    .catch((e) => console.error("[scorecard] webhook FAILED:", e));
 }
 
 function reveal(send) {
