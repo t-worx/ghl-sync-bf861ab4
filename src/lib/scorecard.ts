@@ -551,7 +551,7 @@ export function initScorecard() {
     }
     lead = { name, email };
     trackFormSubmission(name, email);
-    reveal(!$("lead-site").value);
+    reveal(true);
   });
   on("restart", "click", () => {
     answers.fill(null);
